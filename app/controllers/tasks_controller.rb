@@ -114,6 +114,11 @@ class TasksController < ApplicationController
     if Task.bucket_empty?(params[:bucket], current_user, @view)
       @empty_bucket = params[:bucket]
     end
+    
+    uri = URI.parse("#{Setting.api[:end_point]}/tasks/#{@task.id}")
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Delete.new(uri.request_uri) 
+    response = http.request(request)
 
     update_sidebar if called_from_index_page?
     respond_with(@task)
@@ -150,6 +155,35 @@ class TasksController < ApplicationController
         filters.delete(params[:filter])
       end
     end
+  end
+
+  def save_api
+    @task = Task.find params[:id]
+    uri = URI.parse("#{Setting.api[:end_point]}/tasks")
+    response = Net::HTTP.post_form(uri, { 'task[name]' => @task.name, 
+                                          'task[due_to]' => @task.bucket, 
+                                          'task[category]' => @task.category,
+                                          'task[crm_id]' => @task.id})
+    update_sidebar if called_from_index_page?
+    respond_with(@task)
+  end
+
+  def load_api
+    @task = Task.find params[:id]
+    uri = URI.parse("#{Setting.api[:end_point]}/tasks/#{@task.id}")
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Get.new(uri.request_uri)
+    response = http.request(request)   
+    data = JSON.parse(response.body)
+    
+    if data['crm_id'].to_i == @task.id
+      @task.update_attributes name: data['name'],
+                              bucket: data['due_to'],
+                              category: data['category']
+    end
+
+    update_sidebar if called_from_index_page?
+    respond_with(@task)
   end
 
 private

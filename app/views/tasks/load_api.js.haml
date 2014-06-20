@@ -1,0 +1,3 @@
+- id = dom_id(@task)
+- partial = (@task.assigned_to && @task.assigned_to != current_user.id) ? "assigned" : "pending"
+$('##{id}').html('#{ j render(:partial => partial, :collection => [ @task ], :locals => { :bucket => @task.bucket }) }');

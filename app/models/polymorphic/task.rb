@@ -41,8 +41,8 @@ class Task < ActiveRecord::Base
   scope :my, ->(*args) {
     options = args[0] || {}
     user_option = (options.is_a?(Hash) ? options[:user] : options) || User.current_user
-    includes(:assignee).
-    where('(user_id = ? AND assigned_to IS NULL) OR assigned_to = ?', user_option, user_option).
+    ids = user_option.groups.map{|g| g.users.map(&:id)}.flatten.uniq
+    where('user_id in (?)', ids).
     order(options[:order] || 'name ASC').
     limit(options[:limit]) # nil selects all records
   }
@@ -120,7 +120,9 @@ class Task < ActiveRecord::Base
   # Matcher for the :my named scope.
   #----------------------------------------------------------------------------
   def my?(user)
-    (self.user == user && assignee.nil?) || assignee == user
+    ids = user.groups.map{|g| g.users.map(&:id)}.flatten.uniq
+    ids.include? self.user_id
+    # (self.user == user && assignee.nil?) || assignee == user
   end
 
   # Matcher for the :assigned_by named scope.

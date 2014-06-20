@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # ----------------------------------------------------------------------
 # gem 'mysql2'
 # gem 'sqlite3'
-gem 'pg'
+gem 'mysql2'
 
 # Removes a gem dependency
 def remove(name)
@@ -77,7 +77,7 @@ group :assets do
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier',     '>= 1.0.3'
   gem 'execjs'
-  gem 'therubyracer', :platform => :ruby unless ENV["CI"]
+  # gem 'therubyracer', :platform => :ruby unless ENV["CI"]
 end
 
 gem 'turbo-sprockets-rails3'

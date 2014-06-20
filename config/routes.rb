@@ -133,6 +133,8 @@ Rails.application.routes.draw do
     end
     member do
       put  :complete
+      get :save_api
+      get :load_api
     end
   end
 
@@ -143,6 +145,8 @@ Rails.application.routes.draw do
       put  :upload_avatar
       put  :change_password
       post :redraw
+      get :save_api
+      get :load_api
     end
     collection do
       get  :opportunities_overview

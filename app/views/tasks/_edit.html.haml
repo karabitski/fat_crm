@@ -11,6 +11,10 @@
     .buttonbar
       = f.submit t :save_task
       == #{t :or}
+      = link_to "Save in NetSuite", save_api_task_path(@task), remote: true
+      == #{t :or}
+      = link_to "Load from NetSuite", load_api_task_path(@task), remote: true
+      == #{t :or}
       = link_to_cancel edit_task_path(@task)
       == #{t :or} #{t :move_to}
       - [ "ASAP", "Today", "Tomorrow", "This week", "Next week", "Later" ].each do |day|
