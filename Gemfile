@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # ----------------------------------------------------------------------
 # gem 'mysql2'
 # gem 'sqlite3'
-gem 'mysql2'
+gem 'pg'
 
 # Removes a gem dependency
 def remove(name)
