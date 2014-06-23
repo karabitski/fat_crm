@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131207033244) do
+ActiveRecord::Schema.define(:version => 20140623083919) do
 
   create_table "account_contacts", :force => true do |t|
     t.integer  "account_id"
@@ -385,9 +385,11 @@ ActiveRecord::Schema.define(:version => 20131207033244) do
     t.datetime "updated_at",                                     :null => false
     t.string   "background_info"
     t.text     "subscribed_users"
+    t.integer  "netsuite_id"
   end
 
   add_index "tasks", ["assigned_to"], :name => "index_tasks_on_assigned_to"
+  add_index "tasks", ["netsuite_id"], :name => "index_tasks_on_netsuite_id"
   add_index "tasks", ["user_id", "name", "deleted_at"], :name => "index_tasks_on_user_id_and_name_and_deleted_at", :unique => true
 
   create_table "users", :force => true do |t|

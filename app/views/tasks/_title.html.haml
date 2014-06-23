@@ -1,4 +1,5 @@
 .title_tools
+  = link_to "Import tasks", import_api_tasks_path
   = link_to_inline(:create_task, url_for(:action => :new, :view => @view), :text => t(:create_task))
 .title#title
   = (@view == "assigned" ? t(:assigned_tasks) : t(:tasks))

@@ -163,7 +163,8 @@ class TasksController < ApplicationController
     response = Net::HTTP.post_form(uri, { 'task[name]' => @task.name, 
                                           'task[due_to]' => @task.bucket, 
                                           'task[category]' => @task.category,
-                                          'task[crm_id]' => @task.id})
+                                          'task[crm_id]' => @task.id,
+                                          'task[netsuite_id]' => @task.netsuite_id})
     update_sidebar if called_from_index_page?
     respond_with(@task)
   end
@@ -184,6 +185,24 @@ class TasksController < ApplicationController
 
     update_sidebar if called_from_index_page?
     respond_with(@task)
+  end
+
+  def import_api
+    uri = URI.parse("#{Setting.api[:end_point]}/tasks.json")
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Get.new(uri.request_uri)
+    response = http.request(request)
+    data = JSON.parse(response.body)
+
+    data.each do |task|
+      if task['crm_id'].blank? || Task.find_by_id(task['crm_id']).nil?
+        current_user.tasks.create name: task['name'],
+                                  bucket: task['due_to'],
+                                  category: task['category'],
+                                  netsuite_id: task['id']
+      end
+    end   
+    redirect_to tasks_path
   end
 
 private

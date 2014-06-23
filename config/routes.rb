@@ -130,6 +130,7 @@ Rails.application.routes.draw do
     collection do
       post :filter
       match :auto_complete
+      get :import_api
     end
     member do
       put  :complete
